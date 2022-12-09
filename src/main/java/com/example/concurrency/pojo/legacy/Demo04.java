@@ -1,4 +1,4 @@
-package com.example.concurrency.pojo;
+package com.example.concurrency.pojo.legacy;
 
 public class Demo04 {
 

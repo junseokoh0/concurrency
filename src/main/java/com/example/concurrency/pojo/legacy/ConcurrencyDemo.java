@@ -1,4 +1,4 @@
-package com.example.concurrency.pojo;
+package com.example.concurrency.pojo.legacy;
 
 import org.springframework.util.StopWatch;
 
