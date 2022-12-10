@@ -19,8 +19,9 @@ public class DemoSample3 {
             new Thread(some::addIndex).start();
         }
 
-        System.out.println("some.getIndex : " + some.getIndex());
-        System.out.println("some.getIndexInt : " + some.getIndexInt());
+        final String threadName = "[" + Thread.currentThread().getName() + "]";
+        System.out.println(threadName + "some.getIndex : " + some.getIndex());
+        System.out.println(threadName + "some.getIndexInt : " + some.getIndexInt());
 
     }
 
