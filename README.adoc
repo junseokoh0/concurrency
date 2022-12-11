@@ -49,6 +49,10 @@ Rob Pike 가 지적했다고 한답니다. +
 
 '''
 
+=== Multi Threading
+일반적으로 단일 CPU는 여러 스레드 간에 실행시간을 공유하여 지정된 시간 동안 각 스레드 사이를 switching 함. +
+Application의 Thread를 다른 CPU에서 사용하는 것도 가능함.
+
 === CPU core 수 확인
 
 [source,shell]
@@ -65,3 +69,30 @@ MacBook의 Core 를 GUI를 통해서 확인하면 다음과 같다.
 hw.physicalcpu: 8
 hw.logicalcpu: 16
 ----
+
+=== JVM CPU Core 수 조정
+아래 옵션은 JAVA Advanced(고급) Runtime Option이다. +
+`-XX:ActiveProcessorCount=x` +
+VM이 GarbageCollection 및 ForkJoinPool 과 같은 다양한 작업에 사용할 스레드 풀의 크기를 계산하는데 사용할 CPU 수 재정의 +
+
+> 여기서 생각할 것, ForkJoinPool이란? +
+GarbageCollection 과 ForkJoinPool 에만 영향을 끼치는 것인가? +
+
+참고지만, 도커 컨테이너에서 여러 Java 프로세세스를 실행할 때 CPU 리소스를 분할는데 유용하게 사용. +
+
+실제 해당 옵션을 주고 아래 코드를 실행해 보자.
+----
+-XX:ActiveProcessorCount=1
+----
+----
+    public static void main(String[] args) {
+        System.out.println(">>>>> runtime availableProcessors :: " + Runtime.getRuntime().availableProcessors());
+    }
+----
+결과
+----
+>>>>> runtime availableProcessors :: 1
+----
+
+
+출처 : https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE
