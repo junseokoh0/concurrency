@@ -103,3 +103,104 @@ AtomicIntegerDemo 클래스에서 테스트..
 Counter 클래스를 두개 만들었는데, 루프를 20번 돌아서, 20이 출력되어야 원하는 결과라고 볼 수 있음. +
 하지만, AtomicInteger를 사용하지 않고, int를 사용한 클래스의 경우, 20보다 작은 수가 출력되는 걸 볼 수 있음. +
 
+'''
+
+=== ThreadLocal
+
+아래와 같은 코드가 있을 때 어떤 결과가 나올?
+
+[source,java]
+----
+public static void main(String[] args) throws InterruptedException {
+    System.out.println(">>>>> runtime availableProcessors :: " + Runtime.getRuntime().availableProcessors());
+    final ThreadLocalCounter counter = new ThreadLocalCounter();
+    final Thread t1 = new Thread(counter, "t1");
+    final Thread t2 = new Thread(counter, "t2");
+    t1.start();
+    t2.start();
+}
+// ...
+class ThreadLocalCounter implements Runnable {
+    private static final int START_INDEX = 0;
+    private static final int END_INDEX = 10;
+
+    private ThreadLocal<Integer> count = new ThreadLocal<>();
+
+    public ThreadLocalCounter() {
+        count.set(0);
+    }
+
+    @SneakyThrows
+    @Override
+    public void run() {
+
+        for (int i = START_INDEX; i < END_INDEX; i++) {
+            count.set(count.get() + 1);
+        }
+        printThreadWithCount(Thread.currentThread());
+    }
+
+    private void printThreadWithCount(Thread thread) {
+        System.out.println(">>>>> " + thread.getName() + " - count : " + getCount());
+    }
+
+    public int getCount() {
+        return count.get();
+    }
+}
+----
+
+결과는 다음과 같다.
+
+----
+Exception in thread "t2" Exception in thread "t1" java.lang.NullPointerException: Cannot invoke "java.lang.Integer.intValue()" because the return value of "java.lang.ThreadLocal.get()" is null
+----
+
+> 참고로 MAIN Thread의 우선수위는 5
+
+이유인 즉슨, main Thread가 ThreadLocal변수를 0으로 set 하였고, +
+Thread t1, t2는 main Thread가 초기화 한 ThreadLocal 변수에 영향을 받지 않았기 때문에, +
+t1, t2 Thread의 ThreadLocal 변수는 null인 상태인 것이다.
+
+아래의 코드로 변경하면 t1, t2 쓰레드는 동일한 결과를 출력하게 된다
+.
+[source, java]
+----
+// main method는 동일
+
+// ...
+
+class ThreadLocalCounter implements Runnable {
+    private static final int START_INDEX = 0;
+    private static final int END_INDEX = 10;
+
+    private ThreadLocal<Integer> count = new ThreadLocal<>();
+
+    @SneakyThrows
+    @Override
+    public void run() {
+
+        if (START_INDEX == 0) count.set(0);
+
+        for (int i = START_INDEX; i < END_INDEX; i++) {
+            count.set(count.get() + 1);
+        }
+        printThreadWithCount(Thread.currentThread());
+    }
+
+    private void printThreadWithCount(Thread thread) {
+        System.out.println(">>>>> " + thread.getName() + " - count : " + getCount());
+    }
+
+    public int getCount() {
+        return count.get();
+    }
+}
+----
+결과
+[source, script]
+----
+>>>>> runtime availableProcessors :: 1
+>>>>> t1 - count : 10
+>>>>> t2 - count : 10
+----
