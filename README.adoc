@@ -95,4 +95,11 @@ GarbageCollection 과 ForkJoinPool 에만 영향을 끼치는 것인가? +
 ----
 
 
-출처 : https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE
+참고 : https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE
+
+=== AtomicInteger
+AtomicIntegerDemo 클래스에서 테스트..
+
+Counter 클래스를 두개 만들었는데, 루프를 20번 돌아서, 20이 출력되어야 원하는 결과라고 볼 수 있음. +
+하지만, AtomicInteger를 사용하지 않고, int를 사용한 클래스의 경우, 20보다 작은 수가 출력되는 걸 볼 수 있음. +
+

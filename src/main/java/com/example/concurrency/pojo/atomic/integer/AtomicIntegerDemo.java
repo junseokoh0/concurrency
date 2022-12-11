@@ -8,6 +8,7 @@ public class AtomicIntegerDemo {
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println(">>>>> runtime availableProcessors :: " + Runtime.getRuntime().availableProcessors());
+//        final Counter counter = new Counter();
         final AtomicCounter counter = new AtomicCounter();
         final Thread t1 = new Thread(counter, "t1");
         final Thread t2 = new Thread(counter, "t2");
@@ -15,7 +16,6 @@ public class AtomicIntegerDemo {
         t2.start();
     }
 }
-
 
 class AtomicCounter implements Runnable {
     private final AtomicInteger count = new AtomicInteger();
@@ -27,8 +27,8 @@ class AtomicCounter implements Runnable {
     @Override
     public void run() {
         for (int i = START_INDEX; i < END_INDEX; i++) {
-            Thread.sleep(1);
-            System.out.println(">>>>> Thread [" + Thread.currentThread().getName() + "] current count :: " + getCount());
+            Thread.sleep(10);
+//            System.out.println(">>>>> Thread [" + Thread.currentThread().getName() + "] current count :: " + getCount());
             count.addAndGet(1);
         }
         printThreadWithCount(Thread.currentThread());
@@ -53,7 +53,8 @@ class Counter implements Runnable {
     @Override
     public void run() {
         for (int i = START_INDEX; i < END_INDEX; i++) {
-            Thread.sleep(1);
+            Thread.sleep(10);
+//            System.out.println(">>>>> Thread [" + Thread.currentThread().getName() + "] current count :: " + getCount());
             count++;
         }
         printThreadWithCount(Thread.currentThread());
