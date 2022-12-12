@@ -204,3 +204,18 @@ class ThreadLocalCounter implements Runnable {
 >>>>> t1 - count : 10
 >>>>> t2 - count : 10
 ----
+
+=== volatile
+
+CPU는 초당 많은 명령을 수행할 수 있으므로, RAM에서 가져오는 것은 그다지 이상적이 않음 +
+이 상황을 개선하기 위해 프로세서는 Out of Order Execution, Branch Prediction, Speculative Execution 및 Caching과 같은 트릭을 사용하고 있다
+
+간단히 말해, 하나의 스레드가 캐시된 값을 업데이트 할 때 어떤 일이 발생하는지 두 번 생각해야 한다.
+
+==== 언제 Volatile 을 사용하나?
+
+**Thread.yield** +
+현재 Thread가 프로세서의 현재 사용을 양보할 의향이 있다는 스케줄러에 대한 힌트 +
+스케줄러는 이 힌트를 무시해도 됨
+
+현재 주어진, com.example.concurrency.pojo.volatiles 코드로는 와닿지 않음
