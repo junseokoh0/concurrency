@@ -24,7 +24,7 @@ public class VolatileTest {
 }
 
 class SharedObject {
-    public volatile int counter = 0;
+    public int counter = 0;
 
 
     public int getCounter() {
